@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <title>Throttled Progress Bar</title>
+</head>
+<body>
+    <style></style>
+    <div class="progressBarThrottled">
+            <button id="addprogressbar" onclick="AddProgressBar">Add Progress Bar</button>
+            <div id="queueLable"></div>
+            <div id="bars" style="display:flex; flex-direction: column; gap: 10px; padding: 10px;">
+                <div id="bar0" class="w3-border" style="border: 1px solid black;">
+                    <div id="w3"></div>
+                    </div>
+                    <div id="bar1" class="w3-border" style="border: 1px solid black;">
+                        <div id="w3"></div>
+                        </div>
+                        <div id="bar2" class="w3-border" style="border: 1px solid black;">
+                            <div id="w3"></div>
+                            </div>
+                            <div id="bar3" class="w3-border" style="border: 1px solid black;">
+                                <div id="w3"></div>
+                                </div>
+                                <div id="bar4" class="w3-border" style="border: 1px solid black;">
+                                    <div id="w3"></div>
+                                    </div>
+            </div>
+    </div>
+
+    <style>
+        .w3-border{
+            width: 600px;
+        }
+        #w3{
+            height:24px; background-color: grey; text-align: center; font-weight: bold; font-size: 20px; width: 0px;
+        }
+    </style>
+
+    <script>
+        let queePogressBars
+        let progressBars = []
+
+        const AddProgressBar=()=>{
+            let pindex = progressBars?.length
+            progressBars.push(0)
+            if(pindex>=4){
+                queePogressBars = progressBars?.length - 5
+                document.getElementById('queueLable').innerText = queePogressBars
+            }
+        }
+
+        let it = 0
+        
+        setInterval(() => {
+            for (let i=0; i<Math.min(progressBars?.length,  5);i++){
+
+                let idname = `bar${i+it}`
+                let el =  document.querySelector(`#${idname} #w3`)
+                let el2 =  document.querySelector(`#${idname}`)
+
+                if(progressBars[i]!==null){ 
+                    progressBars[i] = progressBars[i] + 1
+                }
+
+                if(progressBars[i]>=600){
+
+                    let elements = `<div id=bar${it+5} class="w3-border" style="border: 1px solid black;">
+                    <div id="w3"></div>
+                    </div>`
+
+                    if(queePogressBars>0){
+                        document.getElementById('queueLable').innerText = queePogressBars = queePogressBars -= 1
+                    }
+                    progressBars.splice(i, 1)
+                    it += 1
+                    el2.setAttribute('style', 'display:none')
+                    $('#bars').append(elements)
+
+                }
+
+                
+                el.setAttribute('style', `width:${progressBars[i]||0}px`)
+                console.log(progressBars, 'progress Bars')
+            }
+
+
+        }, 1);
+
+        document.getElementById('addprogressbar').addEventListener('click', (s=>{
+            AddProgressBar()
+        }))
+
+
+    </script>
+</html>
+
+<!-- 
+
+p1 p2
+
+[10, 5, 8, 0]
+
+[10, 5]
+0 = p1
+1 = p2
+
+[5, 8]
+p1 (vanished)
+0 = p2
+1 = p3
+
+[8, 0]
+0 = p3
+1 = p4
+
+
+ -->
